@@ -79,3 +79,19 @@ class AudioDspTest {
         assertEquals(listOf<Short>(3, 4, 5, 6, 0, 0), out.toList())
     }
 }
+
+class BiquadTest {
+    @Test fun highPassRemovesDcAndKeepsVoice() {
+        val rate = 48000
+        val hp = Biquad.highPass(rate, 100.0, 1)
+        val dc = ShortArray(rate) { 10000 }
+        hp.process(dc, rate)
+        assertTrue("DC should decay, got ${dc.last()}", kotlin.math.abs(dc.last().toInt()) < 50)
+
+        val hp2 = Biquad.highPass(rate, 100.0, 1)
+        val voice = ShortArray(rate) { (sin(2 * PI * 1000 * it / rate) * 10000).toInt().toShort() }
+        hp2.process(voice, rate)
+        val db = AudioDsp.rmsDb(voice.copyOfRange(rate / 2, rate), rate / 2)
+        assertTrue("1 kHz should pass, got $db", db > -14f) // 10000/32767 sine ≈ -13.3 dBFS
+    }
+}

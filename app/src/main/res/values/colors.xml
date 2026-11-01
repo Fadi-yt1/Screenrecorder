@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="graphite">#FF0B0B12</color>
+    <color name="midnight">#FF05050A</color>
+    <color name="electric_purple">#FF8B3DFF</color>
+    <color name="neon_cyan">#FF22E4FF</color>
+    <color name="record_red">#FFFF2D46</color>
+    <color name="ic_launcher_background">#FF07060F</color>
+</resources>

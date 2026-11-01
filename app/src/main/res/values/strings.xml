@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QORVEXA</string>
+    <string name="tagline">Capture Every Frame. Experience Every Detail.</string>
+    <string name="channel_recording">Recording</string>
+    <string name="channel_recording_desc">Shows while a recording is running, with controls</string>
+    <string name="channel_alerts">Recording alerts</string>
+    <string name="channel_alerts_desc">Heat, storage and battery warnings during recording</string>
+    <string name="channel_overlay">Floating controls</string>
+    <string name="channel_overlay_desc">Shows while the floating record button is on</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_resume">Resume</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_screenshot">Screenshot</string>
+    <string name="action_close">Close</string>
+    <string name="action_record">Record</string>
+    <string name="action_draw">Draw</string>
+    <string name="action_settings">Settings</string>
+    <string name="notif_recording">Recording</string>
+    <string name="notif_paused">Paused</string>
+    <string name="notif_countdown">Starting in %1$d…</string>
+    <string name="notif_overlay">Floating controls are on</string>
+    <string name="notif_overlay_text">Tap the QORVEXA button on screen to record</string>
+    <string name="saved_recording">Recording saved</string>
+    <string name="saved_screenshot">Screenshot saved</string>
+    <string name="watermark_text">QORVEXA</string>
+</resources>

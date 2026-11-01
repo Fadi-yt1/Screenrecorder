@@ -128,3 +128,43 @@ class LinearResampler(private val inRate: Int, private val outRate: Int, private
         return outFrames
     }
 }
+
+/**
+ * RBJ biquad filter on interleaved PCM16 (independent state per channel).
+ * "Voice enhancement" uses a 100 Hz high-pass to remove rumble and handling noise.
+ */
+class Biquad private constructor(
+    private val b0: Double, private val b1: Double, private val b2: Double,
+    private val a1: Double, private val a2: Double, private val channels: Int,
+) {
+    private val x1 = DoubleArray(channels)
+    private val x2 = DoubleArray(channels)
+    private val y1 = DoubleArray(channels)
+    private val y2 = DoubleArray(channels)
+
+    fun process(buf: ShortArray, frames: Int) {
+        for (f in 0 until frames) {
+            for (c in 0 until channels) {
+                val i = f * channels + c
+                val x = buf[i].toDouble()
+                val y = b0 * x + b1 * x1[c] + b2 * x2[c] - a1 * y1[c] - a2 * y2[c]
+                x2[c] = x1[c]; x1[c] = x
+                y2[c] = y1[c]; y1[c] = y
+                buf[i] = y.toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
+            }
+        }
+    }
+
+    companion object {
+        fun highPass(sampleRate: Int, cutoffHz: Double, channels: Int, q: Double = 0.707): Biquad {
+            val w0 = 2 * Math.PI * cutoffHz / sampleRate
+            val alpha = Math.sin(w0) / (2 * q)
+            val cos = Math.cos(w0)
+            val a0 = 1 + alpha
+            return Biquad(
+                b0 = (1 + cos) / 2 / a0, b1 = -(1 + cos) / a0, b2 = (1 + cos) / 2 / a0,
+                a1 = -2 * cos / a0, a2 = (1 - alpha) / a0, channels = channels,
+            )
+        }
+    }
+}
