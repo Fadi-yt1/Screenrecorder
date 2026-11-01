@@ -52,7 +52,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -86,7 +85,8 @@ import java.util.Date
 /** Thumbnail loaded lazily through the platform thumbnail cache. */
 @Composable
 fun MediaThumb(item: LibraryItem, loader: ThumbnailLoader, modifier: Modifier = Modifier) {
-    val bmp by produceState(loader.cached(item.media), item.media.uri) { value = loader.load(item.media) }
+    var bmp by remember(item.media.uri) { mutableStateOf(loader.cached(item.media)) }
+    LaunchedEffect(item.media.uri) { if (bmp == null) bmp = loader.load(item.media) }
     Box(modifier.clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.surfaceVariant), contentAlignment = Alignment.Center) {
         bmp?.let { Image(it.asImageBitmap(), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize()) }
             ?: Icon(Icons.Filled.VideoLibrary, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
